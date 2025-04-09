@@ -1,39 +1,35 @@
 from bson import ObjectId
-from datetime import timedelta
 
 test_users = [
-    {"_id": ObjectId(), "username": "thundergod", "email": "thundergod@mhigh.edu", "password": "thundergodpassword"},
-    {"_id": ObjectId(), "username": "metalgeek", "email": "metalgeek@mhigh.edu", "password": "metalgeekpassword"},
-    {"_id": ObjectId(), "username": "zerocool", "email": "zerocool@mhigh.edu", "password": "zerocoolpassword"},
-    {"_id": ObjectId(), "username": "crashoverride", "email": "crashoverride@hmhigh.edu", "password": "crashoverridepassword"},
-    {"_id": ObjectId(), "username": "sleeptoken", "email": "sleeptoken@mhigh.edu", "password": "sleeptokenpassword"},
+    {"_id": ObjectId(), "username": "ironman", "email": "ironman@octofit.edu", "password": "ironmanpassword"},
+    {"_id": ObjectId(), "username": "blackwidow", "email": "blackwidow@octofit.edu", "password": "blackwidowpassword"},
+    {"_id": ObjectId(), "username": "hulk", "email": "hulk@octofit.edu", "password": "hulkpassword"},
+    {"_id": ObjectId(), "username": "hawkeye", "email": "hawkeye@octofit.edu", "password": "hawkeyepassword"},
+    {"_id": ObjectId(), "username": "thor", "email": "thor@octofit.edu", "password": "thorpassword"},
 ]
 
 test_teams = [
-    {"_id": ObjectId(), "name": "Blue Team", "members": []},
-    {"_id": ObjectId(), "name": "Gold Team", "members": []},
+    {"_id": ObjectId(), "name": "Red Team", "members": []},
+    {"_id": ObjectId(), "name": "Green Team", "members": []},
 ]
 
 test_activities = [
-    {"_id": ObjectId(), "user": None, "activity_type": "Cycling", "duration": timedelta(hours=1)},
-    {"_id": ObjectId(), "user": None, "activity_type": "Crossfit", "duration": timedelta(hours=2)},
-    {"_id": ObjectId(), "user": None, "activity_type": "Running", "duration": timedelta(hours=1, minutes=30)},
-    {"_id": ObjectId(), "user": None, "activity_type": "Strength", "duration": timedelta(minutes=30)},
-    {"_id": ObjectId(), "user": None, "activity_type": "Swimming", "duration": timedelta(hours=1, minutes=15)},
+    {"_id": ObjectId(), "user": None, "activity_type": "Yoga", "duration": 45, "date": "2025-04-01"},
+    {"_id": ObjectId(), "user": None, "activity_type": "Pilates", "duration": 60, "date": "2025-04-02"},
+    {"_id": ObjectId(), "user": None, "activity_type": "Running", "duration": 30, "date": "2025-04-03"},
+    {"_id": ObjectId(), "user": None, "activity_type": "Weightlifting", "duration": 90, "date": "2025-04-04"},
+    {"_id": ObjectId(), "user": None, "activity_type": "Swimming", "duration": 120, "date": "2025-04-05"},
 ]
 
 test_leaderboard = [
-    {"_id": ObjectId(), "user": None, "score": 100},
-    {"_id": ObjectId(), "user": None, "score": 90},
-    {"_id": ObjectId(), "user": None, "score": 95},
-    {"_id": ObjectId(), "user": None, "score": 85},
-    {"_id": ObjectId(), "user": None, "score": 80},
+    {"_id": ObjectId(), "team": None, "points": 150},
+    {"_id": ObjectId(), "team": None, "points": 120},
 ]
 
 test_workouts = [
-    {"_id": ObjectId(), "name": "Cycling Training", "description": "Training for a road cycling event"},
-    {"_id": ObjectId(), "name": "Crossfit", "description": "Training for a crossfit competition"},
-    {"_id": ObjectId(), "name": "Running Training", "description": "Training for a marathon"},
-    {"_id": ObjectId(), "name": "Strength Training", "description": "Training for strength"},
-    {"_id": ObjectId(), "name": "Swimming Training", "description": "Training for a swimming competition"},
+    {"_id": ObjectId(), "name": "Yoga Basics", "description": "Beginner yoga session", "difficulty": "Beginner"},
+    {"_id": ObjectId(), "name": "Pilates Core", "description": "Core strengthening pilates", "difficulty": "Intermediate"},
+    {"_id": ObjectId(), "name": "Running Endurance", "description": "Endurance training for runners", "difficulty": "Intermediate"},
+    {"_id": ObjectId(), "name": "Weightlifting 101", "description": "Introduction to weightlifting", "difficulty": "Beginner"},
+    {"_id": ObjectId(), "name": "Swimming Drills", "description": "Advanced swimming techniques", "difficulty": "Advanced"},
 ]

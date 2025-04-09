@@ -1,61 +1,73 @@
 from django.core.management.base import BaseCommand
 from octofit_tracker.models import User, Team, Activity, Leaderboard, Workout
+from django.conf import settings
+from pymongo import MongoClient
+from bson import ObjectId
+from datetime import timedelta
 
 class Command(BaseCommand):
     help = 'Populate the database with test data for users, teams, activities, leaderboard, and workouts'
 
     def handle(self, *args, **kwargs):
-        # Clear existing data
-        User.objects.all().delete()
-        Team.objects.all().delete()
-        Activity.objects.all().delete()
-        Leaderboard.objects.all().delete()
-        Workout.objects.all().delete()
+        # Connect to MongoDB using CLIENT dictionary from settings
+        client = MongoClient(
+            host=settings.DATABASES['default']['CLIENT']['host'],
+            port=settings.DATABASES['default']['CLIENT']['port'],
+            username=settings.DATABASES['default']['CLIENT'].get('username'),
+            password=settings.DATABASES['default']['CLIENT'].get('password'),
+            authSource=settings.DATABASES['default']['CLIENT'].get('authSource', 'admin')
+        )
+        db = client[settings.DATABASES['default']['NAME']]
+
+        # Drop existing collections
+        db.users.drop()
+        db.teams.drop()
+        db.activities.drop()
+        db.leaderboard.drop()
+        db.workouts.drop()
 
         # Create users
         users = [
-            User(username='thundergod', email='thundergod@mhigh.edu', password='thundergodpassword'),
-            User(username='metalgeek', email='metalgeek@mhigh.edu', password='metalgeekpassword'),
-            User(username='zerocool', email='zerocool@mhigh.edu', password='zerocoolpassword'),
-            User(username='crashoverride', email='crashoverride@hmhigh.edu', password='crashoverridepassword'),
-            User(username='sleeptoken', email='sleeptoken@mhigh.edu', password='sleeptokenpassword'),
+            {"_id": ObjectId(), "username": "ironman", "email": "ironman@octofit.edu", "password": "ironmanpassword"},
+            {"_id": ObjectId(), "username": "blackwidow", "email": "blackwidow@octofit.edu", "password": "blackwidowpassword"},
+            {"_id": ObjectId(), "username": "hulk", "email": "hulk@octofit.edu", "password": "hulkpassword"},
+            {"_id": ObjectId(), "username": "hawkeye", "email": "hawkeye@octofit.edu", "password": "hawkeyepassword"},
+            {"_id": ObjectId(), "username": "thor", "email": "thor@octofit.edu", "password": "thorpassword"},
         ]
-        for user in users:
-            user.save()  # Save each user individually to populate primary keys
+        db.users.insert_many(users)
 
         # Create teams
-        team1 = Team(name='Blue Team')
-        team2 = Team(name='Gold Team')
-        team1.save()
-        team2.save()
-        team1.members.set(users[:3])  # Add first three users to Blue Team
-        team2.members.set(users[3:])  # Add remaining users to Gold Team
+        teams = [
+            {"_id": ObjectId(), "name": "Red Team", "members": []},
+            {"_id": ObjectId(), "name": "Green Team", "members": []},
+        ]
+        db.teams.insert_many(teams)
 
         # Create activities
         activities = [
-            Activity(user=users[0], activity_type='Cycling', duration=60, date='2025-04-01'),
-            Activity(user=users[1], activity_type='Crossfit', duration=120, date='2025-04-02'),
-            Activity(user=users[2], activity_type='Running', duration=90, date='2025-04-03'),
-            Activity(user=users[3], activity_type='Strength', duration=30, date='2025-04-04'),
-            Activity(user=users[4], activity_type='Swimming', duration=75, date='2025-04-05'),
+            {"_id": ObjectId(), "user": None, "activity_type": "Yoga", "duration": 45, "date": "2025-04-01"},
+            {"_id": ObjectId(), "user": None, "activity_type": "Pilates", "duration": 60, "date": "2025-04-02"},
+            {"_id": ObjectId(), "user": None, "activity_type": "Running", "duration": 30, "date": "2025-04-03"},
+            {"_id": ObjectId(), "user": None, "activity_type": "Weightlifting", "duration": 90, "date": "2025-04-04"},
+            {"_id": ObjectId(), "user": None, "activity_type": "Swimming", "duration": 120, "date": "2025-04-05"},
         ]
-        Activity.objects.bulk_create(activities)
+        db.activities.insert_many(activities)
 
         # Create leaderboard entries
-        leaderboard_entries = [
-            Leaderboard(team=team1, points=300),
-            Leaderboard(team=team2, points=250),
+        leaderboard = [
+            {"_id": ObjectId(), "team": None, "points": 150},
+            {"_id": ObjectId(), "team": None, "points": 120},
         ]
-        Leaderboard.objects.bulk_create(leaderboard_entries)
+        db.leaderboard.insert_many(leaderboard)
 
         # Create workouts
         workouts = [
-            Workout(name='Cycling Training', description='Training for a road cycling event', difficulty='Intermediate'),
-            Workout(name='Crossfit', description='Training for a crossfit competition', difficulty='Advanced'),
-            Workout(name='Running Training', description='Training for a marathon', difficulty='Intermediate'),
-            Workout(name='Strength Training', description='Training for strength', difficulty='Beginner'),
-            Workout(name='Swimming Training', description='Training for a swimming competition', difficulty='Intermediate'),
+            {"_id": ObjectId(), "name": "Yoga Basics", "description": "Beginner yoga session", "difficulty": "Beginner"},
+            {"_id": ObjectId(), "name": "Pilates Core", "description": "Core strengthening pilates", "difficulty": "Intermediate"},
+            {"_id": ObjectId(), "name": "Running Endurance", "description": "Endurance training for runners", "difficulty": "Intermediate"},
+            {"_id": ObjectId(), "name": "Weightlifting 101", "description": "Introduction to weightlifting", "difficulty": "Beginner"},
+            {"_id": ObjectId(), "name": "Swimming Drills", "description": "Advanced swimming techniques", "difficulty": "Advanced"},
         ]
-        Workout.objects.bulk_create(workouts)
+        db.workouts.insert_many(workouts)
 
         self.stdout.write(self.style.SUCCESS('Successfully populated the database with test data.'))
